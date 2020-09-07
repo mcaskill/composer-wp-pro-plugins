@@ -20,7 +20,6 @@ class AcfPro extends AbstractPlugin {
 	public function getDownloadUrl() {
 		$api_query = array(
 			'p' => 'pro',
-			'a' => 'download',
 			'k' => getenv( 'ACF_PRO_KEY' ),
 		);
 
@@ -29,7 +28,7 @@ class AcfPro extends AbstractPlugin {
 			$api_query['t'] = $this->version;
 		}
 
-		$api_url = 'https://connect.advancedcustomfields.com/index.php';
+		$api_url = 'https://connect.advancedcustomfields.com/v2/plugins/download';
 
 		return $api_url . '?' . http_build_query( $api_query, '', '&' );
 	}
