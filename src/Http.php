@@ -62,6 +62,11 @@ class Http {
 		curl_setopt( $curl_handle, CURLOPT_FOLLOWLOCATION, true );
 		curl_setopt( $curl_handle, CURLOPT_FAILONERROR, true );
 
+		/**
+		 * @var string|false Because the CURLOPT_RETURNTRANSFER option is set,
+		 *     the {@see \curl_exec()} function returns the result on success,
+		 *     false on failure.
+		 */
 		$response = curl_exec( $curl_handle );
 
 		$curl_errno = curl_errno( $curl_handle );
@@ -74,6 +79,12 @@ class Http {
 				$curl_errno,
 				$curl_error
 			), $curl_errno );
+		}
+
+		if ( 0 === strlen( $response ) ) {
+			throw new RuntimeException(
+				'cURL error: Empty response body'
+			);
 		}
 
 		return $response;

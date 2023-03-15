@@ -26,7 +26,7 @@ abstract class AbstractEddPlugin extends AbstractPlugin {
 	/**
 	 * Get the download URL for this plugin.
 	 *
-	 * @throws UnexpectedValueException If the response is invalid.
+	 * @throws UnexpectedValueException If the response is invalid or versions do not match.
 	 * @return string
 	 */
 	public function getDownloadUrl() {
@@ -87,9 +87,7 @@ abstract class AbstractEddPlugin extends AbstractPlugin {
 				$this->getPackageName()
 			);
 
-			if ( $details ) {
-				$message .= PHP_EOL . PHP_EOL . implode( PHP_EOL . PHP_EOL, $details );
-			}
+			$message .= PHP_EOL . PHP_EOL . implode( PHP_EOL . PHP_EOL, $details );
 
 			throw new UnexpectedValueException( $message );
 		}
@@ -109,7 +107,7 @@ abstract class AbstractEddPlugin extends AbstractPlugin {
 		}
 
 		// If no version is specified, we are fetching the latest version.
-		if ( $this->version && ! Semver::satisfies( $data['new_version'], $this->version ) ) {
+		if ( $this->version && ! Semver::satisfies( (string) $data['new_version'], $this->version ) ) {
 			throw new UnexpectedValueException( sprintf(
 				'Expected download version from API (%s) to match installed version (%s) of package %s',
 				$data['new_version'],

@@ -303,13 +303,11 @@ class NinjaForms extends AbstractEddPlugin {
 				) );
 		}
 
-		if ( $env ) {
-			/**
-			 * Use add-on licensing if available, otherwise use membership licensing.
-			 */
-			$license = ( getenv( "NINJA_FORMS_{$env}_KEY" ) ?: $license );
-			$url     = ( getenv( "NINJA_FORMS_{$env}_URL" ) ?: $url );
-		}
+		/**
+		 * Use add-on licensing if available, otherwise use membership licensing.
+		 */
+		$license = ( getenv( "NINJA_FORMS_{$env}_KEY" ) ?: $license );
+		$url     = ( getenv( "NINJA_FORMS_{$env}_URL" ) ?: $url );
 
 		$http = new Http();
 

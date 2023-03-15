@@ -30,7 +30,7 @@ class GravityForms extends AbstractPlugin {
 	/**
 	 * Get the download URL for this plugin.
 	 *
-	 * @throws UnexpectedValueException If the response is invalid.
+	 * @throws UnexpectedValueException If the response is invalid or versions do not match.
 	 * @return string
 	 */
 	public function getDownloadUrl() {
@@ -76,7 +76,7 @@ class GravityForms extends AbstractPlugin {
 			 */
 			$data = unserialize( $response );
 
-			if ( $data !== false && ! is_array( $data ) ) {
+			if ( ! is_array( $data ) ) {
 				throw new UnexpectedValueException(
 					'unserialize(): Expected a data structure'
 				);
@@ -96,9 +96,7 @@ class GravityForms extends AbstractPlugin {
 				$this->getPackageName()
 			);
 
-			if ( $details ) {
-				$message .= PHP_EOL . PHP_EOL . implode( PHP_EOL . PHP_EOL, $details );
-			}
+			$message .= PHP_EOL . PHP_EOL . implode( PHP_EOL . PHP_EOL, $details );
 
 			throw new UnexpectedValueException( $message );
 		}
@@ -124,7 +122,7 @@ class GravityForms extends AbstractPlugin {
 	 * @param  array<string, mixed> $response     The EDD API response.
 	 * @param  string               $version_key  The API field key that holds the version.
 	 * @param  string               $download_key The API field key that holds the download URL.
-	 * @throws UnexpectedValueException If the response is not OK, invalid, or malformed.
+	 * @throws UnexpectedValueException If the response is invalid or versions do not match.
 	 * @return string
 	 */
 	protected function findDownloadUrl( array $response, $version_key, $download_key ) {
@@ -153,7 +151,7 @@ class GravityForms extends AbstractPlugin {
 			) );
 		}
 
-		if ( ! Semver::satisfies( $version, $this->version ) ) {
+		if ( ! Semver::satisfies( (string) $version, $this->version ) ) {
 			throw new UnexpectedValueException( sprintf(
 				'Expected download version from API (%s) to match installed version (%s) of package %s.',
 				$version,
