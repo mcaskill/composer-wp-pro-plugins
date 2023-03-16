@@ -7,6 +7,7 @@
 
 namespace Junaidbhura\Composer\WPProPlugins\Plugins;
 
+use Composer\Semver\Semver;
 use Exception;
 use Junaidbhura\Composer\WPProPlugins\Http;
 use UnexpectedValueException;
@@ -106,6 +107,22 @@ class GravityForms extends AbstractPlugin {
 			throw new UnexpectedValueException( sprintf(
 				'Expected a valid download URL for package %s',
 				$this->getPackageName()
+			) );
+		}
+
+		if ( empty( $data['version_latest'] ) || ! is_scalar( $data['version_latest'] ) ) {
+			throw new UnexpectedValueException( sprintf(
+				'Expected a valid download version number for package %s',
+				'junaidbhura/' . $this->slug
+			) );
+		}
+
+		if ( ! Semver::satisfies( $data['version_latest'], $this->version ) ) {
+			throw new UnexpectedValueException( sprintf(
+				'Expected download version (%s) to match installed version (%s) of package %s',
+				$data['version_latest'],
+				$this->version,
+				'junaidbhura/' . $this->slug
 			) );
 		}
 
